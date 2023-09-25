@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/empty.proto";
+
+service Books {
+    rpc getBook(google.protobuf.StringValue)
+            returns (Book);
+    rpc addBook(Book) returns (google.protobuf.StringValue);
+     rpc listBooks(google.protobuf.Empty)
+            returns (stream Book);
+}
+
+message Book {
+    string title = 1;
+    string author_1 = 2;
+    string author_2 = 3;
+    string location = 4;
+    string ISBN = 5;
+    string status = 6;
+    float price = 7;
+};
