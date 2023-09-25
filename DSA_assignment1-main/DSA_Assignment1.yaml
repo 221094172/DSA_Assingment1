@@ -1,0 +1,227 @@
+openapi: "3.0.1"
+
+info:
+  title: This is the OpenAPI for lectures and courses within the Faculty of Computing and Informatics 
+  version: "0.0.1"
+
+servers:
+  - url: http://localhost:8080/vle/api/v1
+
+
+paths:
+  /Lecturer:
+    get:
+      summary: Get all lectures within the Faculty of Computing and Informatics 
+      operationId: get_all
+      description: Returns all lecturers currently present within Faculty of Computing and Informatics 
+      responses:
+        '200':
+          description: "A list of lectures"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Lecturer"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+    post:
+      summary: Add a new lecturer
+      operationId: addLecturer
+      description: Create a new lecturer and add it to the Faculty of Comping and Informatics
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Lecturer'
+      responses:
+        '201':
+          description: Lecturer successfully created
+          content:
+            application/json:
+              schema:
+                properties:
+                  userid:
+                    type: string
+                    description: the name of the lecturer newly created
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+
+
+  /Lecturer/{staffNumber}:
+    parameters:
+      - name: staffNumber
+        in: path
+        description: staffNumber of the lecturer
+        schema:
+          type: string
+        required: true
+    get:
+      summary: Get a single lecturer
+      operationId: get_lecturer
+      description: Returns a single lecturer based on their staff number
+      responses:
+        '200':
+          description: lecturer response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lecturer'
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+    put:
+      summary: Update an existing lecturer
+      operationId: update_lecturer
+      description: updates an existing lecturer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Lecturer"
+      responses:
+        '200':
+          description: 'lecturer was successfully updated'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Lecturer"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+    delete:
+      summary: Delete an existing lecturer
+      operationId: delete_lecturer
+      description: deletes an existing lecturer based on their staff number
+      responses:
+        '204':
+          description: Lecturer was successfully deleted
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+
+  /Courses/{courseName}:
+    parameters:
+      - name: courseName
+        in: path
+        description: course name of a specific course
+        schema:
+          type: string
+        required: true
+    get:
+      summary: Get all lectures that teach a certain (specific) course
+      operationId: get_allCourse
+      description: Returns all lecturers teaching a certain (specific) course
+      responses:
+        '200':
+          description: "A list of lectures"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Courses"   
+
+  /Lecturer/{officeNumber}:
+    parameters:
+      - name: officeNumber
+        in: path
+        description: office number of lecturer(s)
+        schema:
+          type: string
+        required: true
+    get:
+      summary: Get all lectures that sit in a specific office
+      operationId: get_allOffices
+      description: Returns all lecturers that sits in a specific office
+      responses:
+        '200':
+          description: "A list of lectures"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Lecturer"               
+
+components:
+  schemas:
+    Lecturer:
+      title: Lecturer Description
+      type: object
+      properties:
+        staffNumber:
+          type: integer
+          description: the staff number of the lecturer
+        officeNumber:
+          type: string
+          description: the office number of the lecturer
+        staffName:
+          type: string
+          description: the staff name of the lecturer
+        title:
+          type: string
+          description: the title of the lecturer 
+        Courses:
+           type: array
+           description: the courses that the lecturer teaches 
+
+    Error:
+      type: object
+      properties:
+        errorType:
+          type: string
+          enum:
+            - BadRequest
+
+            - Not Found
+
+            - InternalServerError
+        message:
+          type: string
+
+    Courses:
+        title: Course Description
+        type: object
+        properties:
+         courseName:
+          type: string
+          description: the name of the Course
+         courseCode:
+          type: string
+          description: the code of the Course
+         nqfLevel:
+           type: integer
+           description: the NQF Level number of the Course      
+
+    Error2:
+      type: object
+      properties:
+        errorType:
+          type: string
+          enum:
+            - BadRequest
+
+            - Not Found
+
+            - InternalServerError
+        message:
+          type: string            
+
+  responses:
+    ErrorResponse:
+      description: Error handling lecturer
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    ErrorResponse2:
+      description: Error handling Course
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error2"     
+
+         
+  
+  
+  
+    
